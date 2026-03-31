@@ -1,0 +1,7 @@
+
+[CLIPBOARD] python -m pip install pynput
+
+[up][up][up][up][up][up][up][enter]
+[up][up][enter]
+[up][up][enter]
+[ctrl_l][ctrl_l][ctrl_l][ctrl_l][ctrl_r][ctrl_r][ctrl_r]c[ctrl_r]c[ctrl_r]

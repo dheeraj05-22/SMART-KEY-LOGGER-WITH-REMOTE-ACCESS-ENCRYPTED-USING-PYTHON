@@ -1,0 +1,6 @@
+
+[CLIPBOARD] filename = date_folder / f"{now.strftime('%I:%M %p')}.txt"
+
+note[enter]
+[enter]
+jrcuftb u6rf ufvuyjh f6uy f 7u6fy [end][down][page_down][right][left]

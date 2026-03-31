@@ -1,0 +1,4 @@
+[📋 CLIPBOARD] chat.openai.com
+[ALT_L]	okay works fine now [BACKSPACE]. Thank you. Now i would like to add a delete button to the [LEFT][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE]optionserver so that i can be able to delete un necessary file will that be possible
+[CTRL_L]
+[ALT_L]	[ALT_L]	[ALT_L]	[CTRL_L]
