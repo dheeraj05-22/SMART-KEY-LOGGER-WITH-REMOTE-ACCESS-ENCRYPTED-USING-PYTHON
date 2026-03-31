@@ -1,0 +1,10 @@
+option2 
+
+[📋 CLIPBOARD] pip install flask
+[CTRL_L]
+[CTRL_L][CTRL_L][CTRL_L]
+clear[CTRL_L][ALT_L]	
+[📋 CLIPBOARD] pip install flask
+Fatal error in launcher: Unable to create process using '"C:\PROJECTS\KEYLOGGER\.venv\Scripts\python.exe"  "C:\PROJECTS\CAPESTONE\KEYLOGGER\.venv\Scripts\pip.exe" install flask': The system cannot find the file specified.
+
+ne[CTRL_L]

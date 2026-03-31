@@ -1,0 +1,317 @@
+[📋 CLIPBOARD] @app.route("/read-log/<date>/<filename>")
+def read_log(date, filename):
+    path = log_dir / date / filename
+    if not path.exists():
+        return "Log not found", 404
+
+    content = path.read_text(encoding="utf-8")
+
+    return render_template_string("""
+    <html>
+    <head>
+        <title>{{ filename }}</title>
+        <style>
+            :root.light {
+                --bg-color: #f5f5f5;
+                --text-color: #121212;
+                --box-bg: #ffffff;
+            }
+            :root.dark {
+                --bg-color: #121212;
+                --text-color: #f5f5f5;
+                --box-bg: #1e1e1e;
+            }
+
+            body {
+                font-family: 'Courier New', monospace;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                padding: 40px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .top-bar {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                background: #007bff;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 6px;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .btn:hover {
+                background: #0056b3;
+            }
+
+            .danger {
+                background: #dc3545;
+            }
+
+            #searchBox {
+                display: block;
+                margin: 10px 0 25px 0; /* spacing above and below */
+                padding: 10px;
+                width: 320px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                font-size: 14px;
+            }
+
+            h2 {
+                margin-top: 0;
+                font-size: 20px;
+                color: var(--text-color);
+            }
+
+            .log-box {
+                background-color: var(--box-bg);
+                border: 1px solid #ccc;
+                padding: 18px;
+                border-radius: 8px;
+                white-space: pre-wrap;
+                line-height: 1.5;
+                max-height: 500px;
+                overflow-y: auto;
+                box-shadow: 0 0 8px rgba(0,0,0,0.15);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="top-bar">
+            <a class="btn" href="/view-logs/{{ date }}">⬅ Back</a>
+            <a class="btn" href="/download-log/{{ date }}/{{ filename }}">⬇ Download</a>
+            <button class="btn danger" onclick="deleteThisFile()">🗑️ Delete This File</button>
+            <button class="btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark Theme</button>
+        </div>
+
+        <input type="text" id="searchBox" onkeyup="searchLog()" placeholder="🔍 Search logs...">
+
+        <h2>{{ filename }}</h2>
+        <div class="log-box" id="logContent">{{ content }}</div>
+
+        <script>
+            // --- THEME HANDLING ---
+            function applyTheme(theme) {
+                document.documentElement.className = theme;
+                const btn = document.getElementById("themeToggle");
+                if (btn)
+                    btn.innerText = theme === "dark" ? "☀️ Light Theme" : "🌙 Dark Theme";
+            }
+
+            function toggleTheme() {
+                const currentTheme = localStorage.getItem("theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                localStorage.setItem("theme", newTheme);
+                applyTheme(newTheme);
+            }
+
+            applyTheme(localStorage.getItem("theme") || "light");
+
+            // --- DELETE FUNCTION ---
+            async function deleteThisFile() {
+                if (!confirm("Delete this log file?")) return;
+                const key = prompt("Enter API key to authorize deletion:");
+                if (!key) return alert("Deletion cancelled (no API key).");
+
+                try {
+                    const res = await fetch(`/delete-log/${encodeURIComponent('{{ date }}')}/${encodeURIComponent('{{ filename }}')}`, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({ api_key: key })
+                    });
+                    const j = await res.json();
+                    if (res.ok) {
+                        alert(j.message || "Deleted");
+                        window.location.href = "/view-logs/{{ date }}";
+                    } else {
+                        alert(j.message || "Failed to delete");
+                    }
+                } catch (e) {
+                    alert("Network error: " + e);
+                }
+            }
+
+            // --- SEARCH FUNCTION ---
+            const original = `{{ content }}`.split("\\n");
+
+            function escapeHTML(text) {
+                return text.replace(/&/g, "&amp;")
+                           .replace(/</g, "&lt;")
+                           .replace(/>/g, "&gt;");
+            }
+
+            function searchLog() {
+                const q = document.getElementById("searchBox").value.toLowerCase();
+                const box = document.getElementById("logContent");
+
+                if (!q) {
+                    box.innerHTML = original.map(escapeHTML).join("<br>");
+                    return;
+                }
+
+                const result = original.filter(line => line.toLowerCase().includes(q))
+                    .map(line => escapeHTML(line)
+                    .replace(new RegExp(`(${q})`, "gi"), "<mark>$1</mark>"));
+
+                box.innerHTML = result.join("<br>");
+            }
+        </script>
+    </body>
+    </html>
+    """, date=date, filename=filename, content=content)
+
+[ALT_L]	logs that belonged to date 6 and when i deleted a log file from it , The deel[BACKSPACE][BACKSPACE]letion was suff[BACKSPACE][BACKSPACE]ccessful. But after the deletion when went bavk to the main page(date folder) I have seen that the 6th date folder file have cam top insted[BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE][BACKSPACE]e top pushing the todays folder dou[BACKSPACE]wn [BACKSPACE],[BACKSPACE]. Again after receiving a new log fike [BACKSPACE][BACKSPACE][BACKSPACE]le todys folder cam to top again. I dont want to be like this.Whenever i deleted a folder/log i[BACKSPACE]file it ssho[BACKSPACE][BACKSPACE][BACKSPACE]hould not not ci[BACKSPACE]omr to the top
+
+[ALT_L]	[ALT_L]	[ALT_L]	[ALT_L]	
+[ALT_L]	
+import re
+[ALT_L]	
+[📋 CLIPBOARD] @app.route("/view-logs")
+def view_log_folders():
+    # Only consider directories named like dd-mm-yyyy
+    folders = [p for p in log_dir.iterdir() if p.is_dir()]
+
+    def parse_folder_date(p: Path):
+        try:
+            # folder names are dd-mm-yyyy
+            return datetime.strptime(p.name, "%d-%m-%Y")
+        except Exception:
+            # fallback to mtime if parse fails (put it at the end)
+            return datetime.fromtimestamp(p.stat().st_mtime)
+
+    # newest (most recent calendar date) first
+    folders.sort(key=parse_folder_date, reverse=True)
+
+    logs = [(folder.name, len(list(folder.glob("*.txt")))) for folder in folders]
+
+    return render_template_string(""" 
+    <!-- (same template HTML as before) -->
+    <html><head><title>📁 Server Log Folders</title>
+    <style> /* your styles here (same as before) */ </style></head>
+    <body>
+        <button class="btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark Theme</button>
+        <h2>📁 Organized Server Logs</h2>
+        <ul>
+        {% for date, count in logs %}
+            <li><a href="/view-logs/{{ date }}">{{ date }}</a> - {{ count }} logs</li>
+        {% endfor %}
+        </ul>
+        <script>
+            function applyTheme(theme) {
+                document.body.className = theme;
+                document.getElementById("themeToggle").innerText =
+                    theme === "dark" ? "☀️ Light Theme" : "🌙 Dark Theme";
+            }
+            function toggleTheme() {
+                const currentTheme = localStorage.getItem("theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                localStorage.setItem("theme", newTheme);
+                applyTheme(newTheme);
+            }
+            applyTheme(localStorage.getItem("theme") || "light");
+        </script>
+    </body></html>
+    """, logs=logs)
+[ALT_L]	[ALT_L]	[ALT_L]	[CTRL_L][ALT_L]	[ALT_L]	
+[📋 CLIPBOARD] @app.route("/view-logs/<date>")
+def view_logs_by_date(date):
+    folder = log_dir / date
+    if not folder.exists():
+        return "Date folder not found", 404
+
+    files = [f for f in folder.glob("*.txt") if f.is_file()]
+
+    time_regex = re.compile(r'^(\d{2}-\d{2} [AP]M)')  # matches "01-48 PM" at start
+
+    def parse_file_time(f: Path):
+        name = f.name
+        m = time_regex.match(name)
+        if m:
+            time_part = m.group(1)  # e.g. "01-48 PM"
+            try:
+                # combine with folder (date) to get a full datetime for correct ordering
+                dt_str = f"{date} {time_part}"           # "08-11-2025 01-48 PM"
+                return datetime.strptime(dt_str, "%d-%m-%Y %I-%M %p")
+            except Exception:
+                pass
+        # fallback to file mtime if parse fails
+        return datetime.fromtimestamp(f.stat().st_mtime)
+
+    # newest first
+    files.sort(key=parse_file_time, reverse=True)
+
+    # render using same template format you already have
+    return render_template_string("""
+    <html><head><title>📂 Logs for {{ date }}</title>
+    <style>
+      /* your styles here (same as before) */
+    </style></head>
+    <body>
+        <a class="btn" href="/view-logs">⬅ Back to All Folders</a>
+        <button class="btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark Theme</button>
+        <h2>📂 Logs for {{ date }}</h2>
+        <ul>
+        {% for file in files %}
+            <li id="li-{{ loop.index }}">
+                <span>{{ file.name }}</span>
+                <span>
+                    <a class="btn" href="/read-log/{{ date }}/{{ file.name }}">View</a>
+                    <a class="btn" href="/download-log/{{ date }}/{{ file.name }}">Download</a>
+                    <button class="btn danger" onclick="deleteFile('{{ date }}','{{ file.name }}', {{ loop.index }})">🗑️ Delete</button>
+                </span>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <script>
+            function applyTheme(theme) {
+                document.body.className = theme;
+                document.getElementById("themeToggle").innerText =
+                    theme === "dark" ? "☀️ Light Theme" : "🌙 Dark Theme";
+            }
+            function toggleTheme() {
+                const currentTheme = localStorage.getItem("theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                localStorage.setItem("theme", newTheme);
+                applyTheme(newTheme);
+            }
+            applyTheme(localStorage.getItem("theme") || "light");
+
+            async function deleteFile(date, filename, liIndex) {
+                if (!confirm(`Delete file ${filename}?`)) return;
+                const key = prompt("Enter API key to authorize deletion:");
+                if (!key) return alert("Deletion cancelled (no API key).");
+
+                try {
+                    const res = await fetch(`/delete-log/${encodeURIComponent(date)}/${encodeURIComponent(filename)}`, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({ api_key: key })
+                    });
+                    const j = await res.json();
+                    if (res.ok) {
+                        alert(j.message || "Deleted");
+                        const li = document.getElementById(`li-${liIndex}`);
+                        if (li) li.remove();
+                    } else {
+                        alert(j.message || "Failed to delete");
+                    }
+                } catch (e) {
+                    alert("Network error: " + e);
+                }
+            }
+        </script>
+    </body></html>
+    """, date=date, files=files)
+[ALT_L]	[ALT_L]	[CTRL_L][CTRL_L][CTRL_L]

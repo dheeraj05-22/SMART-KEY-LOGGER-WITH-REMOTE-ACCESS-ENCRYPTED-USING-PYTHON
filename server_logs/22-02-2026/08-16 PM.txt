@@ -1,0 +1,5 @@
+clear
+pu[BACKSPACE][BACKSPACE]clear
+python server.pu[BACKSPACE]y
+[CTRL_L]
+[CTRL_L][CTRL_L]
