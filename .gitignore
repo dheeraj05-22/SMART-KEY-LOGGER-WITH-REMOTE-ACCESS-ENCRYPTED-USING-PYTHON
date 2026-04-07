@@ -3,6 +3,8 @@ server_logs/
 reports/
 
 *.txt
+!requirements.txt
+
 *.pdf
 
 __pycache__/
