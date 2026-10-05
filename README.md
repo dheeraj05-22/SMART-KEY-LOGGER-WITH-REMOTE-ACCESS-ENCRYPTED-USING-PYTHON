@@ -1,4 +1,4 @@
-# 🔐 Secure Keylogger-Based Log Monitoring and Analysis System
+# 🔐 Keystroke Monitoring & Security Log Management System
 
 ## 📌 Overview
 
