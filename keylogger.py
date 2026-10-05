@@ -7,10 +7,14 @@ import time
 import atexit
 import signal
 import sys
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # ========== CONFIG ==========
-API_KEY = "REDACTED_SECRET"
-SERVER_URL = "http://127.0.0.1:5000/upload"  # Replace with your Flask server IP
+API_KEY = os.getenv("API_KEY")
+SERVER_URL = "http://127.0.0.1:5000/upload"
 log_buffer = ""
 last_log_time = time.time()
 send_interval = 15 * 60  # 15 minutes

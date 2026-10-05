@@ -4,7 +4,9 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import shutil
 import os
+from dotenv import load_dotenv
 import sqlite3
+load_dotenv()
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from analysis_engine import analyze_text
@@ -18,7 +20,7 @@ reports_dir = Path("reports")
 reports_dir.mkdir(exist_ok=True)
 
 app = Flask(__name__)
-app.secret_key = "REDACTED_FLASK_SECRET"
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 DATABASE = "database.db"
 
 def init_db():
@@ -61,8 +63,13 @@ def create_admin():
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
 
-    username = "admin"
-    password = generate_password_hash("REDACTED_PASSWORD")
+    username = os.getenv("ADMIN_USERNAME", "admin")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+
+    if not admin_password:
+        raise RuntimeError("ADMIN_PASSWORD is not configured in the environment.")
+
+    password = generate_password_hash(admin_password)
 
     try:
         c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
@@ -72,6 +79,8 @@ def create_admin():
         print("Admin already exists.")
 
     conn.close()
+
+
 
 create_admin()
 
@@ -122,7 +131,7 @@ def login_required(f):
 log_dir = Path("server_logs")
 log_dir.mkdir(exist_ok=True)
 
-API_KEY = "REDACTED_SECRET"  # Must match with keylogger script; required for delete operations too
+API_KEY = os.getenv("API_KEY")  # Must match with keylogger script; required for delete operations too
 
 @app.route("/")
 def home():
