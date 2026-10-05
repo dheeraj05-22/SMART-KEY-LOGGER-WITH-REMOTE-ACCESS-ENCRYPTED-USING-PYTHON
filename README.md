@@ -206,6 +206,28 @@ The project includes several security-focused implementation practices:
 
 ---
 
+## 📸 Screenshots
+
+### 🔐 Admin Login
+
+![Admin Login](docs/screenshots/login.png)
+
+### 📊 Security Analytics Dashboard
+
+![Security Analytics Dashboard](docs/screenshots/dashboard.png)
+
+### 🔎 Log Analysis
+
+![Log Analysis](docs/screenshots/analysis.png)
+
+### 📄 Automated Security Report
+
+![Automated Security Report](docs/screenshots/report.png)
+
+> **Note:** Screenshots use sanitized sample data for portfolio demonstration. No real credentials, captured keystrokes, or sensitive user information are included.
+
+---
+
 ## 🛠️ Technology Stack
 
 | Technology | Role |
