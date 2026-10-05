@@ -50,62 +50,29 @@ The main goals of the project are to understand and implement practical cybersec
 
 ## 🏗️ System Architecture
 
-The project follows a simple endpoint-to-dashboard workflow:
+```mermaid
+flowchart LR
+    A["Authorized Endpoint"] --> B["Activity Collector"]
+    B --> C["HTTP POST + API Key"]
+    C --> D["Flask Server"]
 
-Authorized Endpoint
-        │
-        │ Keyboard / Clipboard Activity
-        ▼
-┌──────────────────────────────┐
-│      Activity Collector      │
-│                              │
-│  Keyboard Monitoring         │
-│  Clipboard Monitoring        │
-│  Log Buffering               │
-└──────────────┬───────────────┘
-               │
-               │ HTTP POST + API Key
-               ▼
-┌──────────────────────────────┐
-│        Flask Server          │
-│                              │
-│  API Authentication          │
-│  Log Processing              │
-│  Log Organization            │
-│  Authentication              │
-└──────────────┬───────────────┘
-               │
-       ┌───────┴────────┐
-       │                │
-       ▼                ▼
-┌──────────────┐  ┌──────────────┐
-│ Server Logs  │  │    SQLite    │
-│              │  │   Database   │
-│ Date / Time  │  │ User Accounts│
-│ Organization │  │ Authentication│
-└───────┬──────┘  └──────────────┘
-        │
-        ▼
-┌──────────────────────────────┐
-│       Analysis Engine        │
-│                              │
-│  Statistics                  │
-│  Keyword Detection           │
-│  Email Extraction            │
-│  URL Extraction              │
-│  IP Extraction               │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│        Web Dashboard         │
-│                              │
-│  Log Viewer                  │
-│  Search                      │
-│  Analysis                    │
-│  Dashboard Statistics        │
-│  PDF Reports                 │
-└──────────────────────────────┘
+    D --> E["Authentication"]
+    D --> F["Log Storage"]
+    D --> G["Analysis Engine"]
+
+    F --> H["SQLite Database"]
+
+    G --> I["Keyword Detection"]
+    G --> J["Email / URL / IP Extraction"]
+    G --> K["Statistics"]
+
+    E --> L["Web Dashboard"]
+    G --> L
+
+    L --> M["Log Viewer"]
+    L --> N["Search & Analysis"]
+    L --> O["PDF Reports"]
+```
 
 ---
 
