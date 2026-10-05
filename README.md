@@ -212,6 +212,7 @@ The project includes several security-focused implementation practices:
 
 ## 📁 Project Structure
 
+```text
 .
 ├── analysis_engine.py
 ├── keylogger.py
@@ -226,7 +227,9 @@ The project includes several security-focused implementation practices:
     ├── dashboard.html
     └── login.html
 
-Runtime-generated logs, databases, reports, and temporary files are intentionally excluded from version control.
+Runtime-generated logs, databases, reports, and temporary files
+are intentionally excluded from version control.
+```
 
 ---
 
